@@ -39,7 +39,7 @@ if uploaded_file is not None:
         st.subheader(f"Summary for {uploaded_file.name}")
         st.dataframe(summary_df, use_container_width=True)
    
-    except Exeption as e:
+    except Exception as e:
         st.error(f"An error occurred: {e}")
 
 # Combine all summaries if available
