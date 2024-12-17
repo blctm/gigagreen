@@ -23,7 +23,7 @@ if uploaded_file is not None:
         #Display the raw dataframe
        # st.subheader("Extracted DataFrame")
         #st.dataframe(df)
-        #STEP 2: dROP THE FIRST ROW
+        #STEP 2: Drop de first row
         df = drop_first_row(df)
         #STEP 3 convert to the right format
         df = convert_columns(df)
