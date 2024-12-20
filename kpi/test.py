@@ -30,10 +30,12 @@ def calculate_metrics(df, filename):
 
     # Extracting the cell ID from the filename
     cell_id = os.path.splitext(filename)[0]
+    anodo = cell_id.split("_")[0]  # Extract characters before the first underscore
 
     # Creating a dictionary of calculated metrics
     final = {
         "cell_id": cell_id,
+        "Anodo": anodo,
         "1st lithiation capacity (mAh/g)": first_discharge,
         "1st coulombic efficiency (%)": first_coulombic_efficiency,
         "3rd lithiation capacity (mAh/g)": third_lithiation,
@@ -41,7 +43,7 @@ def calculate_metrics(df, filename):
         "average capacity@C/2 (mAh/g)": Avg_C2,
         "average capacity@1C (mAh/g)": Avg_1C,
         "average capacity@1Cch-2Cdch (mAh/g)": Avg_2C,
-        "average capacity@1C (mAh/g)": Avg_1CR,
+        "average capacity@1CR (mAh/g)": Avg_1CR,
         "103rd capacity": last_lithiation
     }
 
