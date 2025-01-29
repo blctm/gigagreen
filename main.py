@@ -9,13 +9,17 @@ BASE_SHAREPOINT_URL = "https://politoit.sharepoint.com/_api/web/GetFolderByServe
 # Function to list files dynamically from SharePoint
 def list_files():
     headers = {"Accept": "application/json;odata=verbose"}
-    response = requests.get(BASE_SHAREPOINT_URL, headers=headers)
-    if response.status_code == 200:
-        files_data = response.json()["d"]["results"]
-        return [file["Name"] for file in files_data]
-    else:
-        st.error(f"Failed to fetch file list from SharePoint. HTTP Status: {response.status_code}")
-        st.write("Response Text:", response.text)
+    try:
+        response = requests.get(BASE_SHAREPOINT_URL, headers=headers, cookies=requests.utils.dict_from_cookiejar(requests.get(BASE_SHAREPOINT_URL).cookies))
+        if response.status_code == 200:
+            files_data = response.json()["d"]["results"]
+            return [file["Name"] for file in files_data]
+        else:
+            st.error(f"Failed to fetch file list from SharePoint. HTTP Status: {response.status_code}")
+            st.write("Response Text:", response.text)
+            return []
+    except Exception as e:
+        st.error(f"Error accessing SharePoint: {e}")
         return []
 
 # Function to process the Excel file
@@ -95,4 +99,26 @@ if files:
                 st.dataframe(final_df)
 else:
     st.warning("No files found in the SharePoint folder.")
+
+# Manual file upload fallback
+st.write("---")
+st.write("If SharePoint access fails, upload your files manually:")
+manual_upload = st.file_uploader("Upload Excel files", accept_multiple_files=True, type=["xlsx"])
+
+if manual_upload:
+    summaries = []
+    for uploaded_file in manual_upload:
+        try:
+            df = pd.read_excel(uploaded_file, engine="openpyxl")
+            summary_df = calculate_metrics(df, uploaded_file.name)
+            if summary_df is not None:
+                summaries.append(summary_df)
+        except Exception as e:
+            st.error(f"Error processing uploaded file {uploaded_file.name}: {e}")
+    
+    if summaries:
+        final_df = pd.concat(summaries, ignore_index=True)
+        st.write("📊 **Processed Data Summary from Uploaded Files:**")
+        st.dataframe(final_df)
+
 
