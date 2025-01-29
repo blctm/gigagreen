@@ -14,7 +14,8 @@ def list_files():
         files_data = response.json()["d"]["results"]
         return [file["Name"] for file in files_data]
     else:
-        st.error("Failed to fetch file list from SharePoint.")
+        st.error(f"Failed to fetch file list from SharePoint. HTTP Status: {response.status_code}")
+        st.write("Response Text:", response.text)
         return []
 
 # Function to process the Excel file
@@ -95,5 +96,3 @@ if files:
 else:
     st.warning("No files found in the SharePoint folder.")
 
-
-#https://politoit.sharepoint.com/_layouts/15/download.aspx?sourceurl=/teams/PRJ_GIGAGREEN/Documenti%20condivisi/General/WP2%20Design%20for%20Manufacturing/Digital%20Twins/Electrochemical_raw_data?csf=1&web=1&e=7Aj3cH
