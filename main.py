@@ -120,5 +120,3 @@ if manual_upload:
         final_df = pd.concat(summaries, ignore_index=True)
         st.write("📊 **Processed Data Summary from Uploaded Files:**")
         st.dataframe(final_df)
-
-
